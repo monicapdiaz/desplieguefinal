@@ -10,24 +10,24 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  proyecto: 'desplieguefinal.csproj'
+  proyecto: 'desplieguefinal/desplieguefinal.csproj'
+  solucion: 'desplieguefinal.sln'
 
 steps:
 - task: UseDotNet@2
   displayName: 'Instalar .NET SDK 9'
   inputs:
     packageType: 'sdk'
-    # Usa siempre la última 9.0.x disponible en el agente
     version: '9.0.x'
     includePreviewVersions: false
 
 - script: dotnet --info
   displayName: 'Información de .NET'
 
-- script: dotnet restore $(proyecto)
+- script: dotnet restore $(solucion)
   displayName: 'dotnet restore'
 
-- script: dotnet build --configuration $(buildConfiguration) $(proyecto) --no-restore
+- script: dotnet build --configuration $(buildConfiguration) $(solucion) --no-restore
   displayName: 'dotnet build $(buildConfiguration)'
 
 # Tareas de Entity Framework Core (opcionales - descomentar si usas EF Core)
@@ -61,3 +61,4 @@ steps:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'drop'
     publishLocation: 'Container'
+
