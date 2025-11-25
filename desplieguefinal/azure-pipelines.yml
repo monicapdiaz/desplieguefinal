@@ -12,6 +12,10 @@ variables:
   buildConfiguration: 'Release'
   proyecto: 'desplieguefinal/desplieguefinal.csproj'
   solucion: 'desplieguefinal.sln'
+  # IMPORTANTE: Configurar esta variable en Azure DevOps > Pipelines > Library > Variable groups
+  # O crear una conexión de servicio de Azure con el nombre 'Azure-Connection-desplieguefinal'
+  azureSubscription: 'Azure-Connection-desplieguefinal'
+  appServiceName: 'desplieguefinal'
 
 steps:
 - task: UseDotNet@2
@@ -62,4 +66,26 @@ steps:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'drop'
     publishLocation: 'Container'
+
+# ============================================
+# CONTINUOUS DEPLOYMENT (CD) - Despliegue a Azure App Service
+# ============================================
+# INSTRUCCIONES PARA HABILITAR EL DESPLIEGUE:
+# 1. Ve a Azure DevOps > Project Settings > Service connections
+# 2. Click en "New service connection"
+# 3. Selecciona "Azure Resource Manager"
+# 4. Selecciona "Workload Identity federation (automatic)" o "Service principal (automatic)"
+# 5. Selecciona tu suscripción de Azure y el Resource Group "Entregafinal"
+# 6. Dale el nombre: "Azure-Connection-desplieguefinal"
+# 7. Guarda la conexión
+# 8. Descomenta las líneas siguientes para habilitar el despliegue automático
+
+- task: AzureWebApp@1
+  displayName: 'Desplegar a Azure App Service'
+  condition: succeeded()
+  inputs:
+    azureSubscription: 'Azure-Connection-desplieguefinal' # ⚠️ CREAR ESTA CONEXIÓN PRIMERO (ver instrucciones arriba)
+    appName: 'desplieguefinal'
+    package: '$(Build.ArtifactStagingDirectory)'
+    deploymentMethod: 'auto'
 
