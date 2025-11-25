@@ -128,7 +128,7 @@ app.MapGet("/", () => Results.Content(@"
         </div>
         
         <div class=""footer"">
-            <p>Desplegado en Azure App Service</p>
+            <p>Desplegado en Azure App Service segunda parte</p>
         </div>
     </div>
 </body>
